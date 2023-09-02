@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
+
     training_type: str
     duration: float
     distance: float
@@ -21,6 +22,7 @@ class InfoMessage:
 @dataclass
 class Training:
     """Базовый класс тренировки."""
+
     LEN_STEP = 0.65
     M_IN_KM = 1000
     H_IN_M = 60
@@ -31,18 +33,22 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
+
         return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
+
         return self.get_distance() / (self.duration)
 
     def get_spent_calories(self) -> None:
         """Получить количество затраченных калорий."""
+
         raise NotImplementedError('Переопределите метод в class(Training)')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
+
         return InfoMessage(self.__class__.__name__,
                            self.duration,
                            self.get_distance(),
@@ -52,6 +58,7 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
+
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
 
@@ -63,6 +70,7 @@ class Running(Training):
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
     WEIGHT_CONST = 0.035
     WEIGHT_CONST_2 = 0.029
     KMH_IN_MS = 0.278
@@ -82,6 +90,7 @@ class SportsWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
+
     SWM_CONST_1 = 1.1
     SWM_CONST_2 = 2
     LEN_STEP = 1.38
@@ -104,16 +113,18 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[float]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    workout_types: dict[str, str] = {'SWM': Swimming,
-                                     'RUN': Running,
-                                     'WLK': SportsWalking,
-                                     }
+
+    workout_types: dict[str, Training] = {'SWM': Swimming,
+                                          'RUN': Running,
+                                          'WLK': SportsWalking,
+                                          }
     training: Training = workout_types[workout_type](*data)
     return training
 
 
 def main(training: Training) -> None:
     """Главная функция."""
+
     inform = training.show_training_info()
     print(inform.get_message())
 
