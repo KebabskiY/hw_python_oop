@@ -33,22 +33,19 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-
         return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-
         return self.get_distance() / (self.duration)
 
     def get_spent_calories(self) -> None:
         """Получить количество затраченных калорий."""
-
-        raise NotImplementedError('Переопределите метод в class(Training)')
+        raise NotImplementedError(f'Не определен метод в классе '
+                                  f'{self.__class__.__name__}')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-
         return InfoMessage(self.__class__.__name__,
                            self.duration,
                            self.get_distance(),
@@ -114,10 +111,10 @@ class Swimming(Training):
 def read_package(workout_type: str, data: list[float]) -> Training:
     """Прочитать данные полученные от датчиков."""
 
-    workout_types: dict[str, Training] = {'SWM': Swimming,
-                                          'RUN': Running,
-                                          'WLK': SportsWalking,
-                                          }
+    workout_types: dict[str, type[Training]] = {'SWM': Swimming,
+                                                'RUN': Running,
+                                                'WLK': SportsWalking,
+                                                }
     training: Training = workout_types[workout_type](*data)
     return training
 
